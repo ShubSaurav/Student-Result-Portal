@@ -428,7 +428,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For issues, questions, or suggestions:
 - Open an issue in the repository
-- Contact: [Your Email]
+- Contact: [Email: shubhamsaurav2264@gmail.com]
+           [Linkedin id: https://www.linkedin.com/in/shubsaurav/]
 
 ---
 
