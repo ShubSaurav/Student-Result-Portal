@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Student Result Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .signup-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.6s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .signup-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .signup-header i {
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        
+        .signup-header h2 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .signup-header p {
+            color: #888;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        label i {
+            margin-right: 8px;
+            color: #667eea;
+        }
+        
+        .required {
+            color: #ff6b6b;
+            margin-left: 3px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .role-option {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .role-option:hover {
+            border-color: #667eea;
+            background: white;
+        }
+        
+        .role-option input[type="radio"] {
+            display: none;
+        }
+        
+        .role-option input[type="radio"]:checked + .role-content {
+            color: #667eea;
+        }
+        
+        .role-option input[type="radio"]:checked ~ {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .role-content i {
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .student-fields {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+        
+        button[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #888;
+        }
+        
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-header">
+            <i class="fas fa-user-plus"></i>
+            <h2>Create Account</h2>
+            <p>Join Student Result Portal</p>
+        </div>
+        
+        <div th:if="${error}" class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <span th:text="${error}">Error message</span>
+        </div>
+        
+        <form th:action="@{/signup}" th:object="${user}" method="post">
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-user-tag"></i>
+                    I am a<span class="required">*</span>
+                </label>
+                <div class="role-selector">
+                    <label class="role-option">
+                        <input type="radio" name="role" value="STUDENT" th:field="*{role}" required onclick="toggleStudentFields(true)">
+                        <div class="role-content">
+                            <i class="fas fa-user-graduate"></i>
+                            <div>Student</div>
+                        </div>
+                    </label>
+                    <label class="role-option">
+                        <input type="radio" name="role" value="TEACHER" th:field="*{role}" required onclick="toggleStudentFields(false)">
+                        <div class="role-content">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <div>Teacher</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="fullName">
+                    <i class="fas fa-id-card"></i>
+                    Full Name<span class="required">*</span>
+                </label>
+                <input type="text" id="fullName" th:field="*{fullName}" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">
+                    <i class="fas fa-envelope"></i>
+                    Email<span class="required">*</span>
+                </label>
+                <input type="email" id="email" th:field="*{email}" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-user"></i>
+                    Username<span class="required">*</span>
+                </label>
+                <input type="text" id="username" th:field="*{username}" required placeholder="Choose a username">
+            </div>
+            
+            <div id="studentFields" class="student-fields">
+                <div class="form-group">
+                    <label for="className">
+                        <i class="fas fa-school"></i>
+                        Class<span class="required">*</span>
+                    </label>
+                    <select id="className" th:field="*{className}">
+                        <option value="">Select Class</option>
+                        <option value="1">Class 1</option>
+                        <option value="2">Class 2</option>
+                        <option value="3">Class 3</option>
+                        <option value="4">Class 4</option>
+                        <option value="5">Class 5</option>
+                        <option value="6">Class 6</option>
+                        <option value="7">Class 7</option>
+                        <option value="8">Class 8</option>
+                        <option value="9">Class 9</option>
+                        <option value="10">Class 10</option>
+                        <option value="11">Class 11</option>
+                        <option value="12">Class 12</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="section">
+                        <i class="fas fa-layer-group"></i>
+                        Section<span class="required">*</span>
+                    </label>
+                    <select id="section" th:field="*{section}">
+                        <option value="">Select Section</option>
+                        <option value="A">Section A</option>
+                        <option value="B">Section B</option>
+                        <option value="C">Section C</option>
+                        <option value="D">Section D</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                    Password<span class="required">*</span>
+                </label>
+                <input type="password" id="password" th:field="*{password}" required placeholder="Create a password">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">
+                    <i class="fas fa-lock"></i>
+                    Confirm Password<span class="required">*</span>
+                </label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+            </div>
+            
+            <button type="submit">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </button>
+        </form>
+        
+        <div class="login-link">
+            Already have an account? <a href="/login">Login here</a>
+        </div>
+    </div>
+    
+    <script>
+        function toggleStudentFields(show) {
+            const studentFields = document.getElementById('studentFields');
+            const classField = document.getElementById('className');
+            const sectionField = document.getElementById('section');
+            
+            if (show) {
+                studentFields.style.display = 'block';
+                classField.required = true;
+                sectionField.required = true;
+            } else {
+                studentFields.style.display = 'none';
+                classField.required = false;
+                sectionField.required = false;
+                classField.value = '';
+                sectionField.value = '';
+            }
+        }
+        
+        // Apply selected state styling
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.role-option').forEach(opt => {
+                    opt.style.borderColor = '#e0e0e0';
+                    opt.style.background = '#f8f9fa';
+                });
+                this.style.borderColor = '#667eea';
+                this.style.background = 'rgba(102, 126, 234, 0.1)';
+            });
+        });
+    </script>
+</body>
+</html>

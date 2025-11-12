@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Student Result</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            animation: slideUp 0.5s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .upload-illustration {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            position: relative;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .upload-illustration .document {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .upload-illustration .document::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-top: 20px solid #f8f9fa;
+            border-radius: 0 10px 0 0;
+        }
+        
+        .upload-illustration .lines {
+            position: absolute;
+            width: 50px;
+            top: 35px;
+            left: 15px;
+        }
+        
+        .upload-illustration .lines div {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.6);
+            margin-bottom: 6px;
+            border-radius: 2px;
+        }
+        
+        .upload-illustration .arrow {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(240, 147, 251, 0.4);
+        }
+        
+        .upload-illustration .arrow i {
+            color: white;
+            font-size: 1.2em;
+        }
+        
+        .header i {
+            font-size: 4em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+        
+        .decorative-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            opacity: 0.1;
+            animation: floatAround 20s ease-in-out infinite;
+        }
+        
+        .floating-icon:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-icon:nth-child(2) {
+            top: 70%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+        
+        .floating-icon:nth-child(3) {
+            bottom: 20%;
+            left: 15%;
+            animation-delay: 10s;
+        }
+        
+        @keyframes floatAround {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, -10px) rotate(90deg); }
+            50% { transform: translate(-10px, 10px) rotate(180deg); }
+            75% { transform: translate(10px, 10px) rotate(270deg); }
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 0.95em;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        label i {
+            margin-right: 8px;
+            color: #667eea;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        input::placeholder {
+            color: #aaa;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 43px;
+            color: #aaa;
+        }
+        
+        .marks-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 0.85em;
+            color: #888;
+        }
+        
+        .grade-preview {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+        
+        button[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #764ba2;
+        }
+        
+        .back-link i {
+            margin-right: 5px;
+        }
+        
+        .required {
+            color: #ff6b6b;
+            margin-left: 3px;
+        }
+        
+        .helper-text {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                padding: 30px 25px;
+            }
+            
+            h1 {
+                font-size: 1.6em;
+            }
+            
+            .header i {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="upload-illustration">
+                <div class="document">
+                    <div class="lines">
+                        <div style="width: 100%;"></div>
+                        <div style="width: 80%;"></div>
+                        <div style="width: 90%;"></div>
+                    </div>
+                </div>
+                <div class="arrow">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+            <h1>Upload Student Result</h1>
+            <p class="subtitle">Enter student performance details</p>
+        </div>
+        
+        <div class="decorative-elements">
+            <i class="fas fa-graduation-cap floating-icon" style="font-size: 3em;"></i>
+            <i class="fas fa-book floating-icon" style="font-size: 2.5em;"></i>
+            <i class="fas fa-pencil-alt floating-icon" style="font-size: 2em;"></i>
+        </div>
+        
+        <form th:action="@{/upload}" th:object="${student}" method="post" id="uploadForm">
+            <div class="form-group">
+                <label for="name">
+                    <i class="fas fa-user"></i>
+                    Student Name<span class="required">*</span>
+                </label>
+                <input type="text" 
+                       id="name" 
+                       th:field="*{name}" 
+                       required 
+                       placeholder="e.g., John Smith"
+                       autocomplete="name">
+            </div>
+            
+            <div class="form-group">
+                <label for="className">
+                    <i class="fas fa-school"></i>
+                    Class<span class="required">*</span>
+                </label>
+                <select id="className" th:field="*{className}" required>
+                    <option value="">Select Class</option>
+                    <option value="1">Class 1</option>
+                    <option value="2">Class 2</option>
+                    <option value="3">Class 3</option>
+                    <option value="4">Class 4</option>
+                    <option value="5">Class 5</option>
+                    <option value="6">Class 6</option>
+                    <option value="7">Class 7</option>
+                    <option value="8">Class 8</option>
+                    <option value="9">Class 9</option>
+                    <option value="10">Class 10</option>
+                    <option value="11">Class 11</option>
+                    <option value="12">Class 12</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="section">
+                    <i class="fas fa-layer-group"></i>
+                    Section<span class="required">*</span>
+                </label>
+                <select id="section" th:field="*{section}" required>
+                    <option value="">Select Section</option>
+                    <option value="A">Section A</option>
+                    <option value="B">Section B</option>
+                    <option value="C">Section C</option>
+                    <option value="D">Section D</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="subject">
+                    <i class="fas fa-book"></i>
+                    Subject<span class="required">*</span>
+                </label>
+                <input type="text" 
+                       id="subject" 
+                       th:field="*{subject}" 
+                       required 
+                       placeholder="e.g., Mathematics, Physics, Chemistry"
+                       list="subjects">
+                <datalist id="subjects">
+                    <option value="Mathematics">
+                    <option value="Physics">
+                    <option value="Chemistry">
+                    <option value="Biology">
+                    <option value="Computer Science">
+                    <option value="English">
+                    <option value="History">
+                    <option value="Geography">
+                </datalist>
+            </div>
+            
+            <div class="form-group">
+                <label for="marks">
+                    <i class="fas fa-star"></i>
+                    Marks<span class="required">*</span>
+                </label>
+                <input type="number" 
+                       id="marks" 
+                       th:field="*{marks}" 
+                       min="0" 
+                       max="100" 
+                       required 
+                       placeholder="Enter marks (0-100)"
+                       oninput="updateGradePreview(this.value)">
+                <div class="marks-info">
+                    <span class="helper-text">Score out of 100</span>
+                    <span id="gradePreview" class="grade-preview" style="display: none;"></span>
+                </div>
+            </div>
+            
+            <button type="submit">
+                <i class="fas fa-check-circle"></i>
+                Submit Result
+            </button>
+        </form>
+        
+        <a href="/" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Results
+        </a>
+    </div>
+    
+    <script>
+        function updateGradePreview(marks) {
+            const gradePreview = document.getElementById('gradePreview');
+            if (marks === '' || marks < 0 || marks > 100) {
+                gradePreview.style.display = 'none';
+                return;
+            }
+            
+            let grade = '';
+            let color = '';
+            
+            if (marks >= 90) {
+                grade = 'A+';
+                color = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
+            } else if (marks >= 80) {
+                grade = 'A';
+                color = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
+            } else if (marks >= 70) {
+                grade = 'B';
+                color = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+            } else if (marks >= 60) {
+                grade = 'C';
+                color = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+            } else if (marks >= 50) {
+                grade = 'D';
+                color = 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)';
+            } else {
+                grade = 'F';
+                color = 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)';
+            }
+            
+            gradePreview.textContent = 'Grade: ' + grade;
+            gradePreview.style.background = color;
+            gradePreview.style.color = 'white';
+            gradePreview.style.display = 'inline-block';
+        }
+        
+        // Form validation feedback
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            const button = this.querySelector('button[type="submit"]');
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            button.disabled = true;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Results - Student Result Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-left h1 {
+            color: white;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+        
+        .header-left p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 5px;
+        }
+        
+        .header-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .user-info {
+            color: white;
+            text-align: right;
+        }
+        
+        .user-info .name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .user-info .class-info {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .logout-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .stat-card h3 {
+            color: #888;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stat-card i {
+            font-size: 3em;
+            opacity: 0.1;
+            float: right;
+            margin-top: -20px;
+        }
+        
+        .results-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .section-header h2 {
+            color: #333;
+            font-size: 1.8em;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-box input {
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+        }
+        
+        thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+        
+        thead th:first-child {
+            border-radius: 12px 0 0 12px;
+        }
+        
+        thead th:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+        
+        tbody tr {
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        tbody tr:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        
+        tbody td {
+            padding: 20px 15px;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        tbody td:first-child {
+            border-left: 1px solid #f0f0f0;
+            border-radius: 12px 0 0 12px;
+        }
+        
+        tbody td:last-child {
+            border-right: 1px solid #f0f0f0;
+            border-radius: 0 12px 12px 0;
+        }
+        
+        .grade-badge {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-block;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+        
+        .grade-a { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; }
+        .grade-b { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .grade-c { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; }
+        .grade-d { background: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 100%); color: white; }
+        .grade-f { background: linear-gradient(135deg, #434343 0%, #000000 100%); color: white; }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-illustration {
+            font-size: 120px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+        
+        .empty-state h3 {
+            color: #888;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        
+        .empty-state p {
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <h1><i class="fas fa-graduation-cap"></i> My Results</h1>
+            <p>View your academic performance</p>
+        </div>
+        <div class="header-right">
+            <div class="user-info" th:if="${user}">
+                <div class="name" th:text="${user.fullName}">Student Name</div>
+                <div class="class-info">
+                    <span th:text="'Class ' + ${user.className} + ' - Section ' + ${user.section}">Class - Section</span>
+                </div>
+            </div>
+            <a href="/logout" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Subjects</h3>
+                <div class="value" th:text="${totalSubjects}">0</div>
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="stat-card">
+                <h3>Average Marks</h3>
+                <div class="value" th:text="${averageMarks != null ? #numbers.formatDecimal(averageMarks, 1, 2) : '0.00'}">0.00</div>
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-card">
+                <h3>Highest Score</h3>
+                <div class="value" th:text="${highestScore}">0</div>
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="stat-card">
+                <h3>Grade Points</h3>
+                <div class="value" th:text="${averageMarks != null ? (averageMarks >= 90 ? 'A' : averageMarks >= 80 ? 'B' : averageMarks >= 70 ? 'C' : averageMarks >= 60 ? 'D' : 'F') : 'N/A'}">N/A</div>
+                <i class="fas fa-medal"></i>
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <div class="section-header">
+                <h2><i class="fas fa-clipboard-list"></i> My Subject Results</h2>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search subjects..." onkeyup="filterResults()">
+                </div>
+            </div>
+            
+            <div th:if="${students != null and #lists.size(students) > 0}">
+                <table id="resultsTable">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Marks</th>
+                            <th>Grade</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="student : ${students}">
+                            <td th:text="${student.subject}">Subject</td>
+                            <td th:text="${student.marks}">0</td>
+                            <td>
+                                <span class="grade-badge" 
+                                      th:classappend="${student.grade == 'A' ? 'grade-a' : student.grade == 'B' ? 'grade-b' : student.grade == 'C' ? 'grade-c' : student.grade == 'D' ? 'grade-d' : 'grade-f'}"
+                                      th:text="${student.grade}">
+                                    Grade
+                                </span>
+                            </td>
+                            <td th:text="${#temporals.format(student.date, 'dd MMM yyyy')}">Date</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div th:if="${students == null or #lists.isEmpty(students)}" class="empty-state">
+                <div class="empty-illustration">📚</div>
+                <h3>No Results Found</h3>
+                <p>Your results will appear here once uploaded by your teacher.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function filterResults() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('resultsTable');
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                const subject = rows[i].getElementsByTagName('td')[0];
+                if (subject) {
+                    const txtValue = subject.textContent || subject.innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
